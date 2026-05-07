@@ -7,13 +7,13 @@ import java.util.Collection;
 
 public interface ItemRepository {
 
-    Item saveItem(Item Item);
+    Item saveItem(Item item);
 
     Collection<Item> getItems();
 
     Item getItemById(Long id);
 
-    Item updateItem(Item Item, Long itemId);
+    Item updateItem(Item item, Long itemId);
 
     void deleteItem(Long id);
 }
