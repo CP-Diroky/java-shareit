@@ -7,13 +7,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @RestController
 @RequestMapping("/items")
 @Validated
@@ -28,31 +25,31 @@ public class ItemController {
 
 
     @PostMapping
-    public Item addItem(@RequestBody @Valid ItemDto itemDto,
+    public ItemDto addItem(@RequestBody @Valid ItemDto itemDto,
                            @RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
-        return itemService.addItem(ItemMapper.toItem(itemDto), userId);
+        return ItemMapper.toItemDto(itemService.addItem(ItemMapper.toItem(itemDto), userId));
     }
 
     @PatchMapping("/{itemId}")
-    public Item updateItem(@RequestBody ItemDto itemDto, @PathVariable @Positive Long itemId,
+    public ItemDto updateItem(@RequestBody ItemDto itemDto, @PathVariable @Positive Long itemId,
                            @RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
-        return itemService.updateItem(ItemMapper.toItem(itemDto), userId, itemId);
+        return ItemMapper.toItemDto(itemService.updateItem(ItemMapper.toItem(itemDto), userId, itemId));
 
     }
 
     @GetMapping("/{itemId}")
-    public Item getItemById(@PathVariable @Positive Long itemId) {
-        return itemService.getItemById(itemId);
+    public ItemDto getItemById(@PathVariable @Positive Long itemId) {
+        return ItemMapper.toItemDto(itemService.getItemById(itemId));
     }
 
     @GetMapping
-    public Collection<Item> getItems(@RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
-        return itemService.getItems(userId);
+    public Collection<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
+        return ItemMapper.itemDtoCollection(itemService.getItems(userId));
     }
 
     @GetMapping("/search")
-    public Collection<Item> searchItems(@RequestParam String text) {
-        return itemService.searchItems(text);
+    public Collection<ItemDto> searchItems(@RequestParam String text) {
+        return ItemMapper.itemDtoCollection(itemService.searchItems(text));
     }
 
 

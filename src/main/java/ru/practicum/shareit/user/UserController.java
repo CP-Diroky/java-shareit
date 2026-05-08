@@ -11,9 +11,7 @@ import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 
 @RestController
 @RequestMapping(path = "/users")
@@ -28,23 +26,23 @@ public class UserController {
     }
 
     @PostMapping
-    public User addUser(@RequestBody @Valid UserDto userDto) {
-        return userService.addUser(UserMapper.toUser(userDto));
+    public UserDto addUser(@RequestBody @Valid UserDto userDto) {
+        return UserMapper.toUserDto(userService.addUser(UserMapper.toUser(userDto)));
     }
 
     @GetMapping
-    public Collection<User> getAllUsers() {
-        return userService.getAllUsers();
+    public Collection<UserDto> getAllUsers() {
+        return UserMapper.toUserDtoCollection(userService.getAllUsers());
     }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable @Positive Long userId) {
-        return userService.getUserById(userId);
+    public UserDto getUserById(@PathVariable @Positive Long userId) {
+        return UserMapper.toUserDto(userService.getUserById(userId));
     }
 
     @PatchMapping("/{userId}")
-    public User changeUser(@RequestBody @Valid UserDto userDto, @PathVariable @Positive Long userId) {
-        return userService.updateUser(UserMapper.toUser(userDto), userId);
+    public UserDto changeUser(@RequestBody @Valid UserDto userDto, @PathVariable @Positive Long userId) {
+        return UserMapper.toUserDto(userService.updateUser(UserMapper.toUser(userDto), userId));
     }
 
     @DeleteMapping("/{id}")

@@ -10,7 +10,7 @@ import java.util.Map;
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
 
-    Map<Long, Item> items = new HashMap<>();
+    private final Map<Long, Item> items = new HashMap<>();
 
     @Override
     public Item saveItem(Item item) {
