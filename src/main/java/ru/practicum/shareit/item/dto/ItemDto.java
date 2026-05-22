@@ -3,7 +3,10 @@ package ru.practicum.shareit.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 
 @Data
@@ -15,4 +18,16 @@ public class ItemDto {
     private String description;
     private Boolean available;
     private Long requestId;
+    private LocalDateTime lastBooking;
+    private LocalDateTime nextBooking;
+    private Collection<CommentDto> comments;
+
+    public ItemDto(Long id, String name, String description, Boolean available, Long requestId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.requestId = requestId;
+    }
+
 }
