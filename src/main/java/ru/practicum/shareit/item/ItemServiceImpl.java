@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exceptions.ConditonsNotMetException;
@@ -35,6 +36,7 @@ public class ItemServiceImpl implements ItemService {
         this.commentRepository = commentRepository;
     }
 
+    @Transactional
     @Override
     public Item addItem(Item item, Long userId) {
         User owner = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден!"));
@@ -47,6 +49,7 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.save(item);
     }
 
+    @Transactional
     @Override
     public Item updateItem(Item item, Long userId, Long itemId) {
         Item newItem = itemRepository.findById(itemId)
@@ -99,7 +102,9 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime nextBooking;
         LocalDateTime now = LocalDateTime.now();
         List<ItemDto> result = new ArrayList<>();
-        Collection<CommentDto> commentList;
+        Collection<CommentDto> commentList =
+                CommentMapper.toCommentDtoCollection(commentRepository.findByItemIdIn(itemsAndId.keySet()));
+        Collection<CommentDto> itemsComments;
         for (Long i: itemsAndId.keySet()) {
             lastBooking = bookings.stream()
                     .filter(booking -> booking.getItem().getId().equals(i))
@@ -111,9 +116,10 @@ public class ItemServiceImpl implements ItemService {
                     .map(Booking::getStart)
                     .filter(start -> start.isAfter(now))
                     .min(LocalDateTime::compareTo).orElse(null);
-            commentList = CommentMapper.toCommentDtoCollection(commentRepository.findByItemId(i));
+            itemsComments = commentList.stream()
+                    .filter(commentDto -> commentDto.getItemId().equals(i)).toList();
             result.add(ItemMapper.toItemDtoWithDatesAndComments(itemsAndId.get(i),
-                    lastBooking, nextBooking, commentList));
+                    lastBooking, nextBooking, itemsComments));
         }
         return result;
     }
@@ -124,6 +130,7 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.searchItems(text);
     }
 
+    @Transactional
     @Override
     public Comment addComment(Comment comment, Long itemId, Long userId) {
         if (!bookingRepository.existsByBookerIdAndItemIdAndEndBeforeAndStatus(userId, itemId,

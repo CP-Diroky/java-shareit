@@ -2,14 +2,16 @@ package ru.practicum.shareit.booking.dto;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.booking.Booking;
 
 import java.time.LocalDateTime;
 
 //Dto класс для получения запросов
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class BookingDto {
 

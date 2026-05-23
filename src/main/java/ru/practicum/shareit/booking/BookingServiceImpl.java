@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.exceptions.ConditonsNotMetException;
 import ru.practicum.shareit.exceptions.NotFoundException;
@@ -28,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public Booking addBooking(BookingDto bookingDto, Long userId) {
         LocalDateTime now = LocalDateTime.now();
@@ -49,6 +51,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.save(booking);
     }
 
+    @Transactional
     @Override
     public Booking approveBooking(Long bookingId, boolean approved, Long userId) {
         Booking booking = bookingRepository.findById(bookingId)

@@ -1,14 +1,11 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.user.User;
 
 import java.util.Collection;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Component
+@UtilityClass
 public class UserMapper {
 
 

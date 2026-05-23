@@ -1,9 +1,11 @@
 package ru.practicum.shareit.booking.dto;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.Booking;
 
 import java.util.Collection;
 
+@UtilityClass
 public class BookingMapper {
 
     public static BookingDtoResponse toBookingDto(Booking booking) {

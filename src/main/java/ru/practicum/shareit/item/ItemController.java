@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.dto.CommentMapper;
@@ -10,7 +11,7 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 
 import java.util.Collection;
 
-
+@Validated
 @RestController
 @RequestMapping("/items")
 public class ItemController {

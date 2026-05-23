@@ -1,14 +1,13 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {

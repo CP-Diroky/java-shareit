@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.ConditonsNotMetException;
 import ru.practicum.shareit.exceptions.DuplicatedDataEception;
 import ru.practicum.shareit.exceptions.NotFoundException;
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public User addUser(User user) {
         if (user == null) throw new ConditonsNotMetException("Неверный ввод!");
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).get();
     }
 
+    @Transactional
     @Override
     public User updateUser(User user, Long userId) {
         if (user == null) throw new ConditonsNotMetException("Неверный ввод!");
@@ -49,6 +52,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newUser);
     }
 
+    @Transactional
     @Override
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
