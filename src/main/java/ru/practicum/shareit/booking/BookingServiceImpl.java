@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.exceptions.ConditonsNotMetException;
+import ru.practicum.shareit.exceptions.ConditionsNotMetException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.Item;
@@ -33,19 +33,19 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking addBooking(BookingDto bookingDto, Long userId) {
         LocalDateTime now = LocalDateTime.now();
-        if (bookingDto == null) throw new ConditonsNotMetException("Неверный ввод!");
+        if (bookingDto == null) throw new ConditionsNotMetException("Неверный ввод!");
         LocalDateTime start = bookingDto.getStart();
         LocalDateTime end = bookingDto.getEnd();
         if (start == null || end == null)
-            throw new ConditonsNotMetException("Даты бронирования не указаны!");
+            throw new ConditionsNotMetException("Даты бронирования не указаны!");
         else if (start.isBefore(now) || end.isBefore(now))
-            throw new ConditonsNotMetException("Даты не могут быть в прошлом!");
-        else if (start.equals(end)) throw new ConditonsNotMetException("Даты не могут быть одинаковыми!");
+            throw new ConditionsNotMetException("Даты не могут быть в прошлом!");
+        else if (start.equals(end)) throw new ConditionsNotMetException("Даты не могут быть одинаковыми!");
         Item item = itemRepository.findById(bookingDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена!"));
         User booker = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден!"));
-        if (!item.getAvailable()) throw new ConditonsNotMetException("Вещь не доступна для бронирования!");
+        if (!item.getAvailable()) throw new ConditionsNotMetException("Вещь не доступна для бронирования!");
         Booking booking = new Booking(start, end, item, booker);
         booking.setStatus(Booking.Status.WAITING);
         return bookingRepository.save(booking);
@@ -57,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() ->  new NotFoundException("Бронирование не найдено!"));
         if (!booking.getItem().getOwner().getId().equals(userId))
-            throw new ConditonsNotMetException("Только владелец вещи может одобрить бронирование!");
+            throw new ConditionsNotMetException("Только владелец вещи может одобрить бронирование!");
         if (approved) booking.setStatus(Booking.Status.APPROVED);
         else booking.setStatus(Booking.Status.REJECTED);
         return bookingRepository.save(booking);
@@ -69,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
                 new NotFoundException("Бронирование не найдено!"));
         if (userRepository.findById(userId).isEmpty()) throw new NotFoundException("Пользователь не найден!");
         if (!booking.getItem().getOwner().getId().equals(userId) && !booking.getBooker().getId().equals(userId))
-            throw new ConditonsNotMetException("Только владелец вещи или автор бронирования может получить информацию!");
+            throw new ConditionsNotMetException("Только владелец вещи или автор бронирования может получить информацию!");
         return booking;
     }
 

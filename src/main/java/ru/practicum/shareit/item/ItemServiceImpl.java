@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.exceptions.ConditonsNotMetException;
+import ru.practicum.shareit.exceptions.ConditionsNotMetException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.item.comment.CommentRepository;
@@ -13,6 +13,8 @@ import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.request.Request;
+import ru.practicum.shareit.request.RequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -26,24 +28,31 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final RequestRepository requestRepository;
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
-                           BookingRepository bookingRepository, CommentRepository commentRepository) {
+                           BookingRepository bookingRepository, CommentRepository commentRepository,
+                           RequestRepository requestRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
+        this.requestRepository = requestRepository;
     }
 
     @Transactional
     @Override
-    public Item addItem(Item item, Long userId) {
+    public Item addItem(Item item, Long userId, Long requestId) {
         User owner = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден!"));
+        if (requestId != null) {
+            Request request = requestRepository.findById(requestId).orElse(null);
+            item.setRequest(request);
+        }
         if (item.getName() == null || item.getDescription() == null || item.getAvailable() == null) {
-            throw new ConditonsNotMetException("Неверный ввод!");
+            throw new ConditionsNotMetException("Неверный ввод!");
         } else if (item.getName().isBlank() || item.getDescription().isBlank()) {
-            throw new ConditonsNotMetException("Неверный ввод!");
+            throw new ConditionsNotMetException("Неверный ввод!");
         }
         item.setOwner(owner);
         return itemRepository.save(item);
@@ -56,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена!"));
         if (userRepository.findById(userId).isEmpty()) throw new NotFoundException("Пользователь не найден!");
         else if (!newItem.getOwner().getId().equals(userId))
-            throw new ConditonsNotMetException("Только владелец может поменять описание вещи!");
+            throw new ConditionsNotMetException("Только владелец может поменять описание вещи!");
         if (item.getName() != null && !item.getName().isBlank()) newItem.setName(item.getName());
         if (item.getDescription() != null && !item.getDescription().isBlank())
             newItem.setDescription(item.getDescription());
@@ -135,7 +144,7 @@ public class ItemServiceImpl implements ItemService {
     public Comment addComment(Comment comment, Long itemId, Long userId) {
         if (!bookingRepository.existsByBookerIdAndItemIdAndEndBeforeAndStatus(userId, itemId,
                 LocalDateTime.now(), Booking.Status.APPROVED))
-            throw new ConditonsNotMetException("Условия для добавления комментария не выполнены");
+            throw new ConditionsNotMetException("Условия для добавления комментария не выполнены");
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Вещь не найдена!"));
         User author = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден!"));
         comment.setItem(item);

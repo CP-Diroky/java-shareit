@@ -3,7 +3,7 @@ package ru.practicum.shareit.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exceptions.ConditonsNotMetException;
+import ru.practicum.shareit.exceptions.ConditionsNotMetException;
 import ru.practicum.shareit.exceptions.DuplicatedDataEception;
 import ru.practicum.shareit.exceptions.NotFoundException;
 
@@ -22,8 +22,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User addUser(User user) {
-        if (user == null) throw new ConditonsNotMetException("Неверный ввод!");
-        else if (user.getEmail() == null) throw new ConditonsNotMetException("Почта не должна быть пустой!");
+        if (user == null) throw new ConditionsNotMetException("Неверный ввод!");
+        else if (user.getEmail() == null) throw new ConditionsNotMetException("Почта не должна быть пустой!");
         else if (!userRepository.findByEmailContaining(user.getEmail()).isEmpty())
             throw new DuplicatedDataEception("Пользователь с такой почтой уже есть!");
         return userRepository.save(user);
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User updateUser(User user, Long userId) {
-        if (user == null) throw new ConditonsNotMetException("Неверный ввод!");
+        if (user == null) throw new ConditionsNotMetException("Неверный ввод!");
         else if (!userRepository.findByEmailContaining(user.getEmail()).isEmpty())
             throw new DuplicatedDataEception("Пользователь с такой почтой уже есть!");
         User newUser = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден!"));

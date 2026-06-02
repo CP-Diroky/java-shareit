@@ -32,6 +32,14 @@ public class ItemMapper {
         );
     }
 
+    public static ItemDto toItemDtoWithOwnerId(Item item) {
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getOwner().getId()
+        );
+    }
+
     public static Item toItem(ItemDto itemDto) {
         return new Item(
             itemDto.getName(),

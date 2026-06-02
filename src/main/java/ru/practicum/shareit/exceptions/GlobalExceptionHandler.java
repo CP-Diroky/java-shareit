@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleConditionsNotMet(ConditonsNotMetException e) {
+    public Map<String, String> handleConditionsNotMet(ConditionsNotMetException e) {
         log.error(e.getMessage());
         return Map.of("error", e.getMessage());
     }
