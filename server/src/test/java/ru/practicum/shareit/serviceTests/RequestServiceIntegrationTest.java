@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exceptions.ConditionsNotMetException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
@@ -45,15 +44,6 @@ class RequestServiceIntegrationTest {
         Assertions.assertNotNull(result.getId());
         Assertions.assertEquals("Need PS5", result.getDescription());
         Assertions.assertNotNull(result.getCreated());
-    }
-
-    @Test
-    void shouldNotAddRequestIfDescriptionBlank() {
-        User user = userRepository.save(new User("Диёр", "diyorka255@mail.ru"));
-
-        Request request = new Request("   ");
-
-        Assertions.assertThrows(ConditionsNotMetException.class, () -> requestService.addRequest(request, user.getId()));
     }
 
     @Test

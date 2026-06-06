@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.exceptions.ConditionsNotMetException;
+
 
 
 @Validated
@@ -21,6 +23,9 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> addBooking(@RequestBody @Valid BookingDto bookingDto,
                                      @RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
+        if (!bookingDto.getEnd().isAfter(bookingDto.getStart())) {
+            throw new ConditionsNotMetException("Дата окончания должна быть позже даты начала");
+        }
         return bookingClient.addBooking(userId, bookingDto);
     }
 

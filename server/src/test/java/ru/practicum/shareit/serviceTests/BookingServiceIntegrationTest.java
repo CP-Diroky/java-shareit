@@ -79,11 +79,11 @@ class BookingServiceIntegrationTest {
     }
 
     @Test
-    void shouldThrowIfDatesInPast() {
-        User owner = userRepository.save(new User("Диёр", "diyorka255@mail.com"));
+    void shouldCreateBookingEvenIfDatesInvalidBecauseGatewayValidates() {
+        User owner = userRepository.save(new User("Диёр", "diyorka@mail.com"));
         User booker = userRepository.save(new User("Booker", "booker@mail.com"));
 
-        Item item = new Item("PS4", "Хорошее состояние", true);
+        Item item = new Item("PS4", "desc", true);
         item.setOwner(owner);
         item = itemRepository.save(item);
 
@@ -96,8 +96,10 @@ class BookingServiceIntegrationTest {
                 null
         );
 
-        Assertions.assertThrows(ConditionsNotMetException.class,
-                () -> bookingService.addBooking(dto, booker.getId()));
+        Booking result = bookingService.addBooking(dto, booker.getId());
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(Booking.Status.WAITING, result.getStatus());
     }
 
     @Test

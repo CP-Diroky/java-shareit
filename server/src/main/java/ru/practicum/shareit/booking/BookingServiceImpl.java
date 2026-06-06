@@ -32,15 +32,8 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public Booking addBooking(BookingDto bookingDto, Long userId) {
-        LocalDateTime now = LocalDateTime.now();
-        if (bookingDto == null) throw new ConditionsNotMetException("Неверный ввод!");
         LocalDateTime start = bookingDto.getStart();
         LocalDateTime end = bookingDto.getEnd();
-        if (start == null || end == null)
-            throw new ConditionsNotMetException("Даты бронирования не указаны!");
-        else if (start.isBefore(now) || end.isBefore(now))
-            throw new ConditionsNotMetException("Даты не могут быть в прошлом!");
-        else if (start.equals(end)) throw new ConditionsNotMetException("Даты не могут быть одинаковыми!");
         Item item = itemRepository.findById(bookingDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена!"));
         User booker = userRepository.findById(userId)

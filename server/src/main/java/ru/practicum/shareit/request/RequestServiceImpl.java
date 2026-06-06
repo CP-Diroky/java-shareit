@@ -3,7 +3,6 @@ package ru.practicum.shareit.request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exceptions.ConditionsNotMetException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
@@ -38,9 +37,6 @@ public class RequestServiceImpl implements RequestService {
     @Transactional
     @Override
     public Request addRequest(Request request, Long userId) {
-        if (request.getDescription() == null || request.getDescription().isBlank()) {
-            throw new ConditionsNotMetException("Описание не должно быть пустым!");
-        }
         request.setCreated(LocalDateTime.now());
         User requestor = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден!"));
         request.setRequestor(requestor);

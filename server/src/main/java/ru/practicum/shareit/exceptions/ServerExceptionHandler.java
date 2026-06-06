@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+public class ServerExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(ServerExceptionHandler.class);
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)

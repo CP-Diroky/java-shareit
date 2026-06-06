@@ -49,11 +49,6 @@ public class ItemServiceImpl implements ItemService {
             Request request = requestRepository.findById(requestId).orElse(null);
             item.setRequest(request);
         }
-        if (item.getName() == null || item.getDescription() == null || item.getAvailable() == null) {
-            throw new ConditionsNotMetException("Неверный ввод!");
-        } else if (item.getName().isBlank() || item.getDescription().isBlank()) {
-            throw new ConditionsNotMetException("Неверный ввод!");
-        }
         item.setOwner(owner);
         return itemRepository.save(item);
     }
