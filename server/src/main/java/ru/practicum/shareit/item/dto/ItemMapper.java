@@ -1,0 +1,55 @@
+package ru.practicum.shareit.item.dto;
+
+import lombok.experimental.UtilityClass;
+import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+
+@UtilityClass
+public class ItemMapper {
+
+    public static ItemDto toItemDto(Item item) {
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                item.getRequest() != null ? item.getRequest().getId() : null
+        );
+    }
+
+    public static ItemDto toItemDtoWithDatesAndComments(Item item, LocalDateTime lastBooking,
+                                                        LocalDateTime nextBooking, Collection<CommentDto> commentDtoList) {
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                item.getRequest() != null ? item.getRequest().getId() : null,
+                lastBooking, nextBooking, commentDtoList
+        );
+    }
+
+    public static ItemDto toItemDtoWithOwnerId(Item item) {
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getOwner().getId()
+        );
+    }
+
+    public static Item toItem(ItemDto itemDto) {
+        return new Item(
+            itemDto.getName(),
+            itemDto.getDescription(),
+            itemDto.getAvailable()
+        );
+    }
+
+    public static Collection<ItemDto> itemDtoCollection(Collection<Item> items) {
+        return items.stream().map(ItemMapper::toItemDto).toList();
+    }
+
+}
